@@ -1,5 +1,9 @@
 import psycopg2
 import yaml
+import os
+import file_helper
+
+MAIN_DIRECTORY = os.path.dirname(__file__)
 
 def establish_connection():
     with open(r'C:\Users\nemet\OneDrive\Dokumentumok\GitHub\db_type_ingestion\postgres_config.yaml', 'r') as file:
@@ -61,5 +65,6 @@ if __name__ == '__main__':
     connection, config = establish_connection()
     create_database(connection, config)
     get_database_version(connection, config)
+    file_helper.open_my_file(main_directory=MAIN_DIRECTORY)
     create_my_table_statement(connection)
     connection.close()
