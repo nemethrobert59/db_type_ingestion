@@ -1,6 +1,8 @@
 import psycopg2
 import yaml
 import os
+import pandas as pd
+from sqlalchemy import create_engine, text
 import file_helper
 
 MAIN_DIRECTORY = os.path.dirname(__file__)
@@ -42,29 +44,48 @@ def get_database_version(connection,config):
         finally:
             cursor.close()
 
-def create_my_table_statement(connection):
+def create_my_table_statement(connection, ddl_statement):
     with connection.cursor() as cursor:
         try:
-            cursor.execute("""CREATE TABLE market_data (
-                            id SERIAL PRIMARY KEY,
-                            datetime TIMESTAMP NOT NULL,
-                            open NUMERIC(10, 2),
-                            high NUMERIC(10, 2),
-                            low NUMERIC(10, 2),
-                            close NUMERIC(10, 2),
-                            volume BIGINT
-                            );""")
+            cursor.execute(f"{ddl_statement}")
             print(f"Your table has been created.")
         except Exception as e:
             print(f"An error occured: {e}")
         finally:
             cursor.close()
 
+def create_database_engine(config):
+    engine = create_engine(f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}/{config["db_name"]}')
+    print(engine)
+    return engine
+
+def load_data_from_file(engine,df,table_name):
+    df.to_sql(schema = "public",name = table_name, con = engine, if_exists="replace", index=False)
+
+def get_record_count(table_name,schema_name = "public"):
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute(f"SELECT COUNT(*) FROM {schema_name}.{table_name};")
+            print(cursor.fetchone()[0])
+        except Exception as e:
+            print(f"An error occured: {e}")
+        finally:
+            cursor.close()
+
+
 
 if __name__ == '__main__':
     connection, config = establish_connection()
     create_database(connection, config)
     get_database_version(connection, config)
-    file_helper.open_my_file(main_directory=MAIN_DIRECTORY)
-    create_my_table_statement(connection)
+    ddl_statement = file_helper.open_ddl_statement(main_directory=MAIN_DIRECTORY)
+    create_my_table_statement(connection, ddl_statement)
+    engine = create_database_engine(config)
+    df = file_helper.read_input_file(main_directory=MAIN_DIRECTORY,file_name="test_data.csv")
+    print(df)
     connection.close()
+    with engine.begin() as conn:
+        df.to_sql(schema="public", name="customer_data", con=conn, if_exists="replace", index=False)
+    with engine.connect() as conn:
+        conn.execute(text("SELECT * FROM public.customer_data;")).fetchall()
+    #get_record_count(table_name="customer_data")
