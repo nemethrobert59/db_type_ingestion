@@ -56,7 +56,6 @@ def create_my_table_statement(connection, ddl_statement):
 
 def create_database_engine(config):
     engine = create_engine(f'postgresql://{config["user"]}:{config["password"]}@{config["host"]}/{config["db_name"]}')
-    print(engine)
     return engine
 
 def load_data_from_file(engine,df,table_name):
@@ -83,9 +82,9 @@ if __name__ == '__main__':
     engine = create_database_engine(config)
     df = file_helper.read_input_file(main_directory=MAIN_DIRECTORY,file_name="test_data.csv")
     print(df)
-    connection.close()
     with engine.begin() as conn:
         df.to_sql(schema="public", name="customer_data", con=conn, if_exists="replace", index=False)
     with engine.connect() as conn:
         conn.execute(text("SELECT * FROM public.customer_data;")).fetchall()
-    #get_record_count(table_name="customer_data")
+    get_record_count(table_name="customer_data")
+    connection.close()
