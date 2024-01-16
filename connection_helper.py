@@ -84,7 +84,6 @@ if __name__ == '__main__':
     print(df)
     with engine.begin() as conn:
         df.to_sql(schema="public", name="customer_data", con=conn, if_exists="replace", index=False)
-    with engine.connect() as conn:
         conn.execute(text("SELECT * FROM public.customer_data;")).fetchall()
     get_record_count(table_name="customer_data")
     connection.close()
