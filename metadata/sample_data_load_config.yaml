@@ -1,0 +1,10 @@
+metadata:
+  file_location: "your_file_path"
+  load_type: "Full/Append/Incremental"
+database:
+  db_type: "postgres"
+  user: "postgres"
+  password: "mypassword"
+  host: "localhost"
+  port: "5432"
+  db_name: "your_database_name"
