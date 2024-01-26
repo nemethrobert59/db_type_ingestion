@@ -11,5 +11,7 @@ services:
       - "54320:5432"
     volumes:
       - my_dbdata:/var/lib/postgresql/data
+      - ./init/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      #- ./ddl/market_data.sql:/docker-entrypoint-initdb.d/market_data.sql
 volumes:
   my_dbdata:
