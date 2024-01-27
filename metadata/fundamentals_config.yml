@@ -1,6 +1,5 @@
 metadata:
-  file_location: "your_file_path"
-  table_name: "your_table_name"
+  table_name: "fundamentals"
   load_type: "Full/Append/Incremental"
 database:
   db_type: "postgres"

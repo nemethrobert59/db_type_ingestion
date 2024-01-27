@@ -1,4 +1,4 @@
-CREATE TABLE market_data.prices-split-adjusted (
+CREATE TABLE market_data.prices_split_adjusted (
     date DATE,
     symbol VARCHAR(10),
     open NUMERIC(10, 6),
