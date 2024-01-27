@@ -5,6 +5,6 @@ https://dev.mysql.com/downloads/connector/odbc/
 
 
 # Start docker database
-docker-compose -f docker-compose-postgres.yml up -d
-docker-compose -f docker-compose-postgres.yml down
+docker-compose -f docker_compose_postgres.yml up -d
+docker-compose -f docker_compose_postgres.yml down
 

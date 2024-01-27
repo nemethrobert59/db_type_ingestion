@@ -1,5 +1,0 @@
-metadata:
-  file_location: "your_file_path"
-  load_type: "Full/Append/Incremental"
-database:
-  db_type: "postgres"
