@@ -2,10 +2,11 @@ import file_helper
 import logging
 import os
 import connection_helper
-from sqlalchemy import inspect, INTEGER, VARCHAR, DATE, NUMERIC
+from sqlalchemy import inspect
 from sqlalchemy.exc import SQLAlchemyError
 import pandas as pd
 import sql_helper
+import argparse
 
 logging.basicConfig(format='##############################\n\
 %(asctime)s - %(levelname)s: %(message)s\
@@ -13,9 +14,14 @@ logging.basicConfig(format='##############################\n\
 
 MAIN_DIRECTORY = os.path.dirname(__file__)
 
+parser = argparse.ArgumentParser(description='Specify the metadata config filename')
+parser.add_argument('--metadata_filename',help='Use the appropriate filename from the metadata folder without file extension.')
+args = parser.parse_args()
+
 
 if __name__ == '__main__':
-    metadata_config = file_helper.read_config_file(config_file_path = "metadata/fundamentals_config.yml")
+    metadata_filename = args.metadata_filename
+    metadata_config = file_helper.read_config_file(config_file_path = f"metadata/{metadata_filename}.yml")
     table_name = metadata_config["metadata"]["table_name"]
 
     db_config = file_helper.read_config_file(config_file_path="docker_compose_postgres.yml")
@@ -52,10 +58,12 @@ if __name__ == '__main__':
         column_types = [col['type'] for col in columns_table]
         print(column_types)
 
-        column_details = [(col['name'], col['type']) for col in columns_table]
+        column_definitions = [(col['name'], col['type']) for col in columns_table]
 
-        print(column_details)
+        #print(column_definitions)
+        pandas_dtypes = sql_helper.sqlalchemy_to_pandas_mapping(column_definitions)
 
-        df = pd.read_csv(file_path,header=1, names=column_names,na_values="NaN")
-        print(df)
+        #print(pandas_dtypes)
+        df = pd.read_csv(file_path,header=1, names=column_names,na_values="NaN",dtype=pandas_dtypes)
+        #print(df)
         df.to_sql(table_name, connection,schema="market_data", if_exists='replace', index=False)
