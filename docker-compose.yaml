@@ -1,40 +1,47 @@
 version: "3.8"
 services:
   framework:
-    build: ./Dockerfile
+    build: .
+    image: my_custom_framework_image:latest
+    container_name: ep_demo
+    volumes:
+      - ./Users/robert.nemeth/Documents/private/db_type_ingestion:/framework
     ports:
-      - '3000:3000'
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - mssql
+      - metadata
   postgres:
     image: "postgres:13"
     container_name: "my_postgres"
-    environment:
-      POSTGRES_DB: "my_db"
-      POSTGRES_USER: "my_user"
-      POSTGRES_PASSWORD: "my_password"
+    env_file:
+      - ./env/postgres.env
     ports:
       - "54320:5432"
     volumes:
-      - data:/data/db
+      - postgres-data:/var/lib/postgresql/data
   mssql:
     container_name: mssql
     image: mcr.microsoft.com/mssql/server:2022-latest
-    #image: mcr.microsoft.com/mssql/server:2017-CU11-ubuntu
+    platform: linux/amd64
     env_file:
       - ./env/mssql.env
     ports:
       - 14330:1433
     volumes:
-      - data:/data/db
+      - mssql-data:/var/opt/mssql
   metadata:
     image: "postgres:13"
     container_name: "metadata"
-    environment:
-      POSTGRES_DB: "metadata"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
+    env_file:
+      - ./env/metadata.env
     ports:
-      - "54320:5432"
+      - "54321:5432"
     volumes:
-      - data:/data/db
+      - metadata-data:/var/lib/postgresql/data
+
 volumes:
-  data:
+  postgres-data:
+  mssql-data:
+  metadata-data:

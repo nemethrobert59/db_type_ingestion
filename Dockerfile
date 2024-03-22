@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["test.py"]
+CMD ["python","test.py"]
