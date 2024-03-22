@@ -2,6 +2,11 @@ version: "3.8"
 services:
   framework:
     build: ./Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./framework
+      - /framework
   postgres:
     image: "postgres:13"
     container_name: "my_postgres"
