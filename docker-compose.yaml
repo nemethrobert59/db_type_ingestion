@@ -5,7 +5,7 @@ services:
     image: my_custom_framework_image:latest
     container_name: ep_demo
     volumes:
-      - ./Users/robert.nemeth/Documents/private/db_type_ingestion:/framework
+      - /Users/robert.nemeth/Documents/private/db_type_ingestion:/framework
     ports:
       - "3000:3000"
     depends_on:
