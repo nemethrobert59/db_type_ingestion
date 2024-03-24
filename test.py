@@ -36,11 +36,13 @@ if __name__ == '__main__':
         meta_df = df.iloc[i]
         print(meta_df)
 
-        print(str(MAIN_DIRECTORY))
+        csv_file_path = MAIN_DIRECTORY + "/data/fundamentals.csv"
+
+        print(csv_file_path)
         
         with open(csv_file_path, 'r') as file:
             data_df = pd.read_csv(file)
-        data_df.to_sql('tbl_name', con=engine, index=True, index_label='id', if_exists='replace')
+        #data_df.to_sql('tbl_name', con=engine, index=True, index_label='id', if_exists='replace')
 
     
     #for index, row in df.iterrows():
