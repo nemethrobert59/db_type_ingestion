@@ -2,12 +2,10 @@ FROM python:3.9
 
 WORKDIR /framework
 
-COPY requirements.txt .
+COPY . .
 
 RUN pip install -r requirements.txt
 
-COPY . .
-
-EXPOSE 3000
+EXPOSE 80
 
 CMD ["python","test.py"]
