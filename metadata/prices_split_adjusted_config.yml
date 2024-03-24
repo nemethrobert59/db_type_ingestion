@@ -1,5 +1,0 @@
-metadata:
-  table_name: "prices_split_adjusted"
-  load_type: "Full/Append/Incremental"
-database:
-  db_type: "postgres"

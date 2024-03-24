@@ -5,9 +5,12 @@ services:
     image: my_custom_framework_image:latest
     container_name: ep_demo
     volumes:
-      - /Users/robert.nemeth/Documents/private/db_type_ingestion:/framework
+      #- /Users/robert.nemeth/Documents/private/db_type_ingestion:/framework
+      - ./utils:/framework/utils
+      - ./test.py:/framework/test.py
+      - ./data:/framework/data
     ports:
-      - "3000:3000"
+      - "4000:80"
     depends_on:
       - postgres
       - mssql
